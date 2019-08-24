@@ -12,7 +12,7 @@ const Picture = require('../models/image');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './uploads')
+      cb(null, './public/assets/uploads')
     },
     filename: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now())

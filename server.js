@@ -34,7 +34,7 @@ app.use('/job',job);
 app.use('/profile',profile);
 app.use('/notification', notification);
 app.use('/image',image)
-app.use('/uploads/', express.static(path.join(__dirname, './uploads/')));
+app.use('/uploads/', express.static(path.join(__dirname, './public/assets/uploads')));
 
 //app.use('/job',job);
 
@@ -55,13 +55,13 @@ app.use('/uploads/', express.static(path.join(__dirname, './uploads/')));
         '.svg',
       ];
       // Point static path to dist
-app.use(express.static(path.join(__dirname, 'dist/jobi/')));
+app.use(express.static(path.join(__dirname, 'public/')));
 
 // Set our api routes
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/jobi/index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
  // Send all other requests to the Angular app
  /*app.get('/', (req, res) => {

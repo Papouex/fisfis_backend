@@ -136,7 +136,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), function
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads')
+    cb(null, './public/assets/uploads')
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now())
@@ -151,7 +151,7 @@ router.post('/uploadphoto/:id', upload.single('image'), (req, res) => {
   console.log(req.file);
   console.log("none")
 
-  var imgSRC = "http://localhost:4000/uploads/" + req.file.filename;
+  var imgSRC = "http://localhost:4000/public/assets/uploads/" + req.file.filename;
   User.update({ "_id": req.params.id }, { "image": imgSRC }, function (err, user) {
     if (err) {
       return res.json({ success: false, msg: "Probleme update" })

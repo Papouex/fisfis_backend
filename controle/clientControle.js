@@ -146,7 +146,7 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), function(req,
 
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './uploads')
+      cb(null, './public/assets/uploads')
     },
     filename: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now())
@@ -156,8 +156,8 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), function(req,
   var upload = multer({ storage: storage })
 
   router.post('/uploadphoto/:id', upload.single('image'), (req, res) => {
-      var imgSRC="http://localhost:4000/uploads/"+req.file.filename;
-      //this.baseUrl+"/uploads/"+this.user.image
+      var imgSRC="http://localhost:4000/public/assets/uploads/"+req.file.filename;
+      //this.baseUrl+"/public/assets/uploads/"+this.user.image
      Client.update({"_id": req.params.id},{"image":imgSRC},function(err, client){
       if(err){
          return res.json({success:false, msg:"Probleme update"})
@@ -169,7 +169,7 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), function(req,
 })
 
 router.post('/uploadcouverture/:id', upload.single('image'), (req, res) => {
-  var imgSRC="http://localhost:4000/uploads/"+req.file.filename;
+  var imgSRC="http://localhost:4000/public/public/assets/uploads/"+req.file.filename;
   //this.baseUrl+"/uploads/"+this.user.image
  ClientProfile.update({"clientId": req.params.id},{"couverture":imgSRC},function(err, client){
   if(err){
@@ -189,7 +189,7 @@ router.post('/uploadgallery/:id',upload.array("uploads[]", 10), (req, res) => {
   {
     ClientProfile.update(
       { "clientId": req.params.id },
-      { $push: { img_links:"http://localhost:4000/uploads/"+req.files[i].filename } }, function(err, profile){
+      { $push: { img_links:"http://localhost:4000/public/assets/uploads/"+req.files[i].filename } }, function(err, profile){
         if(err){
           error=true;
           //res.json({success:false, msg:"Probleme update"})
