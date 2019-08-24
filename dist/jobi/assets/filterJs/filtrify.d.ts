@@ -1,0 +1,1 @@
+export declare function filtrify(containerID, placeholderID);

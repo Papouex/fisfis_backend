@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Extra Job</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+ 
+  <script type="text/javascript">
+
+    
+    $('[data-toggle="slide-collapse"]').on('click', function() {
+      var navMenuCont = $($(this).data('target'));
+      navMenuCont.animate({
+        'width': 'toggle'
+      }, 350);
+      $(".menu-overlay").fadeIn(500);
+    });
+    $(".menu-overlay").click(function(event) {
+      $(".navbar-toggle").trigger("click");
+      $(".menu-overlay").fadeOut(500);
+    });
+    </script>
+  
+  <script>
+    
+
+    function rotateCard(btn){
+        var $card = $(btn).closest('.card-container');
+        console.log($card);
+        if($card.hasClass('hover')){
+            $card.removeClass('hover');
+        } else {
+            $card.addClass('hover');
+        }
+    }
+    </script>
+    <script>
+    $(window).scroll(function (event) {
+    var windowTop = $(this).scrollTop(); 
+    if ($("#client-footer").length) {       
+    if (windowTop >= $("#client-footer").offset().top) {
+        $("#sometimesfixed").addClass("fixed");
+    } else {
+        $("#sometimesfixed").removeClass("fixed");
+    }
+  }
+});
+</script>
+  
+  <link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/css/compiled-4.8.0.min.css">
+  <style>
+    html,body
+{
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+  html,
+    body,
+    header{
+        height: 100%;
+        width:100%;
+    }
+    
+    #intro {
+
+    }
+    
+    .top-nav-collapse {
+        background-color: #24355C;
+      }
+      @media (max-width: 768px) {
+        .navbar:not(.top-nav-collapse) {
+          background-color: #24355C;
+        }
+      }
+      @media (min-width: 800px) and (max-width: 850px) {
+        .navbar:not(.top-nav-collapse) {
+          background-color: #24355C;
+        }
+      }
+      .navbar.navbar-dark .breadcrumb .nav-item .nav-link, .navbar.navbar-dark .navbar-nav .nav-item .nav-link{color:#1F9DB5;font-family: 'Coffee';font-size:21.5px;padding-right:25px;padding-left:25px;}
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+  .inline-edit-empty {
+  text-decoration: none;
+  border-bottom: #1E9BB2 solid 1px !important; 
+  cursor: pointer;
+  width: auto;
+  color: #b9b8b8;
+}
+.app-loading {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+      .app-loading .spinner {
+        height: 200px;
+        width: 200px;
+        animation: rotate 2s linear infinite;
+        transform-origin: center center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
+      .app-loading .spinner .path {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+        animation: dash 1.5s ease-in-out infinite;
+        stroke-linecap: round;
+        stroke: #ddd;
+      }
+      @keyframes rotate {
+        100% {
+          transform: rotate(359deg);
+        }
+      }
+      @keyframes dash {
+        0% {
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
+        }
+        50% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -35px;
+        }
+        100% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -124px;
+        }
+      }
+
+      .rotate {
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+  </style>
+<link rel="stylesheet" href="styles.6b8210deff59ef07911b.css"></head>
+<body>
+
+  <app-root>
+
+
+        <div class="app-loading">
+            <div class="logo rotate"><img src="./assets/omzack.png" alt="prob" height="100px" width="100px"/></div>
+          </div>
+  </app-root>
+ 
+ 
+<script src="runtime-es2015.8801e448d46a181d77d0.js" type="module"></script><script src="polyfills-es2015.570b7a54556fd4a2fecb.js" type="module"></script><script src="runtime-es5.ed9a641974fb40e7fc06.js" nomodule></script><script src="polyfills-es5.da7d01eda4c0e633ce4f.js" nomodule></script><script src="scripts.8d14e3f9bf8161870a97.js"></script><script src="main-es2015.b2edd52e21e5b416b39e.js" type="module"></script><script src="main-es5.c1acfc70bf2c0f2e2e3b.js" nomodule></script></body>
+</html>
+
+
+
