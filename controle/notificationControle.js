@@ -38,6 +38,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), functio
             console.log(err);
             res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
         } else {
+            console.log(notification)
             res.json({ success: true, msg: "notification créé avec succès",obj:notification });
             // sent notif to all users
             if (data.general) {

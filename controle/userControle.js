@@ -29,6 +29,7 @@ router.post('/register', function (req, res, next) {
       res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
       console.log(err);
     } else {
+      console.log(data);
       res.json({ success: true, msg: "Utilisateur créé avec succès", obj: data.id });
     }
   });

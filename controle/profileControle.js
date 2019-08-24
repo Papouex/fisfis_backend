@@ -82,7 +82,7 @@ router.post('/ajouter', passport.authenticate('jwt', { session: false }), functi
     if (err) {
       res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
     } else {
-
+          console.log(data);
       User.findById(req.body.userId, function (err, user) {
 
         user.profileId = data.id;

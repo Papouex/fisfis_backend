@@ -35,6 +35,7 @@ router.post('/ajouter', function(req, res, next) {
         {
             res.json({success:false, msg : err.errors[Object.keys(err.errors)[0]].message});
         }else{
+          console.log(data);
             res.json({success:true, msg :"Job créé avec succès", obj : data.id});
         }
     });

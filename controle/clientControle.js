@@ -37,6 +37,7 @@ router.post('/register', function(req, res, next) {
         if(err){
             res.json({success:false, msg : err.errors[Object.keys(err.errors)[0]].message});
         }else{
+          console.log(data);
             res.json({success:true, msg :"Client créé avec succès", obj : data.id});
         } 
     });
