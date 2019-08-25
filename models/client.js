@@ -15,7 +15,7 @@ let ClientSchema = new Schema({
     password: { type: String, required: 'Mot de passe requis', unique: false},
     tel:      { type: String, required: true, unique: 'Numero \"{VALUE}\", est déja utiliser' },
     fax:      { type: String, required: false, trim: true, index: true, unique: 'Fax \"{VALUE}\", est déja utiliser', sparse: true},
-    image:    { type: String, unique: true},
+    image:    { type: String, unique: false, required:false},
     profileId: { type:mongoose.Schema.Types.ObjectId, ref:'Profile', required:false, unique:true},
     haveProfile: {type:Boolean, required: false},
     type:     { type: Boolean, required: true}

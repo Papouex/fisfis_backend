@@ -34,7 +34,7 @@ app.use('/job',job);
 app.use('/profile',profile);
 app.use('/notification', notification);
 app.use('/image',image)
-app.use('/uploads/', express.static(path.join(__dirname, './public/assets/uploads')));
+app.use('/public/assets/uploads/', express.static(path.join(__dirname, './public/assets/uploads')));
 
 //app.use('/job',job);
 
@@ -54,11 +54,7 @@ app.use('/uploads/', express.static(path.join(__dirname, './public/assets/upload
         '.ttf',
         '.svg',
       ];
-      // Point static path to dist
-app.use(express.static(path.join(__dirname, 'public/')));
-
-// Set our api routes
-
+ 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));

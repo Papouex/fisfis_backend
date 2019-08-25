@@ -140,7 +140,7 @@ var storage = multer.diskStorage({
     cb(null, './public/assets/uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    cb(null, file.fieldname + '-' + Date.now()+".jpeg")
   }
 })
 
@@ -152,7 +152,7 @@ router.post('/uploadphoto/:id', upload.single('image'), (req, res) => {
   console.log(req.file);
   console.log("none")
 
-  var imgSRC = "http://localhost:4000/public/assets/uploads/" + req.file.filename;
+  var imgSRC = "http://164.132.113.63:3000/public/assets/uploads/" + req.file.filename + ".jpeg";
   User.update({ "_id": req.params.id }, { "image": imgSRC }, function (err, user) {
     if (err) {
       return res.json({ success: false, msg: "Probleme update" })
