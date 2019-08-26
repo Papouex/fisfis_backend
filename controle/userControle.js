@@ -152,7 +152,7 @@ router.post('/uploadphoto/:id', upload.single('image'), (req, res) => {
   console.log(req.file);
   console.log("none")
 
-  var imgSRC = "http://164.132.113.63:3000/public/assets/uploads/" + req.file.filename + ".jpeg";
+  var imgSRC = "http://164.132.113.63:3000/uploads/" + req.file.filename;
   User.update({ "_id": req.params.id }, { "image": imgSRC }, function (err, user) {
     if (err) {
       return res.json({ success: false, msg: "Probleme update" })
