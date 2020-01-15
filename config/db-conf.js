@@ -1,5 +1,5 @@
 module.exports = {
-    DB: 'mongodb+srv://papou:EX55793160**@extrajob-byryd.gcp.mongodb.net/test?retryWrites=true&w=majority',
+    DB: 'mongodb://127.0.0.1:27017/fisfis',
     secret: 'blablou'
  };
 

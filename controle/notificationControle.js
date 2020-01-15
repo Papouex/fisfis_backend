@@ -11,26 +11,19 @@ router.post('/create', passport.authenticate('jwt', { session: false }), functio
     console.log(data);
     // create a new Notification
     var newNotification = new Notification();
-    if (data.type)//Client is sender
+    if (data.admin)//Admin sender influencer receiver
     {
-        newNotification.sender_cl = data.sender_cl;
-        newNotification.receiver_us = data.receiver_us;
-    } else {//User is sender
-        newNotification.sender_us = data.sender_us;
-        newNotification.receiver_cl = data.receiver_cl;
-    }
-
-    if (data.general)//Admin send general notification
+        newNotification.sender_ad = data.sender_ad;
+        newNotification.receiver_user = data.receiver_user;
+    }else if(data.serv)
     {
-        newNotification.receiver_general = data.receiver_general;
+        newNotification.receiver_ad=data.receiver_ad;
     }
 
     newNotification.title = data.title;
     newNotification.image = data.image;
     newNotification.message = data.message;
     newNotification.image=data.image;
-    //details?id=5d4f595574481346102f7d32
-
     newNotification.link = data.link;
     // save the Notification
     newNotification.save(function (err, notification) {
@@ -46,12 +39,13 @@ router.post('/create', passport.authenticate('jwt', { session: false }), functio
                     req.app.io.emit(newNotification.receiver_general[i], 'notif for you !');
                 }
             }
-            if (data.type)//Client is sender
+            if (data.admin)//Admin is sender
             {
-                req.app.io.emit(newNotification.receiver_us, 'notif for you !');
-            } else {
+                req.app.io.emit(newNotification.receiver_user, 'notif for you !');
+            } else if(data.serv)
+            {
                 //User is sender
-                req.app.io.emit(newNotification.receiver_cl, 'notif for you !');
+                req.app.io.emit(newNotification.receiver_ad, 'notif for you !');
             }
 
         }
@@ -70,7 +64,7 @@ router.get('/user/:userId', passport.authenticate('jwt', { session: false }), fu
         });
     }
     //needed for user notification
-    Notification.find({ 'receiver_us': userId }).sort('-createdAt').limit(15).exec(function (err, notificationFounded) {
+    Notification.find({ 'receiver_user': userId }).sort('-createdAt').limit(15).exec(function (err, notificationFounded) {
         if (err){ 
             console.log(err);
             return res.status(status.BAD_REQUEST).json(err)
@@ -81,17 +75,18 @@ router.get('/user/:userId', passport.authenticate('jwt', { session: false }), fu
 
 });
 
-router.get('/client/:userId', passport.authenticate('jwt', { session: false }), function (req, res, next) {
-    var userId = req.params.userId;
+//GET ADMIN NOTIFICATIONS
+router.get('/ad/:adId', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    var adId = req.params.adId;
 
     // Check first if it is a valid Id
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!mongoose.Types.ObjectId.isValid(adId)) {
         return res.status(400).send({
-            message: 'Notification Id is invalid ' + userId
+            message: 'Notification Id is invalid ' + adId
         });
     }
 
-    Notification.find({ 'receiver_cl': userId }).sort('-createdAt').limit(15).exec(function (err, notificationFounded) {
+    Notification.find({ 'receiver_ad': adId }).sort('-createdAt').limit(15).exec(function (err, notificationFounded) {
         if (err) return res.status(status.BAD_REQUEST).json(err);
         // We serve as json the Notifications founded
         res.status(status.OK).json(notificationFounded);
@@ -99,19 +94,17 @@ router.get('/client/:userId', passport.authenticate('jwt', { session: false }), 
 
 
 });
+/* GET all saved Notifications admin */
+router.get('/:ad', passport.authenticate('jwt', { session: false }), function (req, res, next) {
 
-
-
-/* GET all saved Notifications */
-router.get('/', passport.authenticate('jwt', { session: false }), function (req, res, next) {
-    Notification.find({}, function (err, notifications) {
+    var adId = req.params.ad;
+    Notification.find({ 'receiver_ad': adId }).sort('-createdAt').exec(function (err, notifications) {
         if (err) return res.status(status.BAD_REQUEST).json(err);
 
         // object of all the Notifications
         res.status(status.OK).json(notifications);
     });
 });
-
 /* DELETE: delete a Notification by id */
 router.delete('/Notification/:notificationId', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     var notificationId = req.params.notificationId;
@@ -124,15 +117,13 @@ router.delete('/Notification/:notificationId', passport.authenticate('jwt', { se
         res.status(status.OK).json({ message: 'SUCCESS' });
     });
 });
+router.put('/seenuser/:userId', function (req, res, next) {
+    const userId = mongoose.Types.ObjectId(req.params.userId);
 
-
-router.put('/seenu/:userid', function (req, res, next) {
-    const userid = mongoose.Types.ObjectId(req.params.userid);
-
-    Notification.updateMany({ 'receiver_us': userid, 'read_by.readerId_us': { $ne: userid } }, {
+    Notification.updateMany({ 'receiver_user': userId, 'read_by.readerId_user': { $ne: userId } }, {
         $push: {
             "read_by": {
-                readerId_us: userid
+                readerId_user: userId
             }
         }
     }, function (err, post) {
@@ -142,12 +133,13 @@ router.put('/seenu/:userid', function (req, res, next) {
 
 
 });
-router.put('/seenc/:userid', function (req, res, next) {
-    const userid = mongoose.Types.ObjectId(req.params.userid);
-    Notification.updateMany({ 'receiver_cl': userid, 'read_by.readerId_cl': { $ne: userid } }, {
+
+router.put('/seenad/:adId', function (req, res, next) {
+    const adId = mongoose.Types.ObjectId(req.params.adId);
+    Notification.updateMany({ 'receiver_ad': infId, 'read_by.readerId_ad': { $ne: adId } }, {
         $push: {
             "read_by": {
-                readerId_cl: userid
+                readerId_ad: adId
             }
         }
     }, function (err, post) {
@@ -155,5 +147,4 @@ router.put('/seenc/:userid', function (req, res, next) {
         res.json(post);
     });
 });
-
 module.exports = router;

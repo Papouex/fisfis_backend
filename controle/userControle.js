@@ -6,43 +6,55 @@ const config = require('../config/db-conf');
 const bcrypt = require('bcrypt-nodejs');
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const mongoose = require('mongoose');
-const User = require('../models/user');
-const Job = require('../models/job');
-const multer = require('multer');
-const Picture = require('../models/image');
-//create
-router.post('/register', function (req, res, next) {
-  var user = new User();
-  /*fname,lname,email,adress,password,tel,image */
-  console.log(req.body.fname);
+const User = require('../models/users');
 
-  user.fname = req.body.fname;
-  user.lname = req.body.lname;
-  user.email = req.body.email;
-  user.adress = req.body.adress;
-  user.password = req.body.password;
-  user.tel = req.body.tel;
-  user.image = req.body.image;
-  user.type = req.body.type;
+
+const multer = require('multer');
+
+
+//Inscription
+router.post('/register', function (req, res, next) {
+  /**fname:    { type: String, required: true},
+    lname:    { type: String, required: true},
+    email:    { type: String, required: true, unique: 'Email \"{VALUE}\", est déja utiliser' },
+    password: { type: String, required: 'Mot de passe requis', unique: false},
+    phone_number:      { type: String, required: true, unique: 'Numero \"{VALUE}\", est déja utiliser' },
+    ban:{type: Boolean, default:false},
+    command_no:{type:Number,default:0},
+    exact_location:{type:String},
+    picture_url:{type:String},
+    prefered_lng:{type:String},
+    zone:{type:String,required:true},
+    updated_at:{type:Date,default:Date.now},
+    createdAt:{type:Date,default:Date.now}, */
+  var user = new User();
+    user.fname = req.body.fname,
+    user.lname = req.body.lname,
+    user.email = req.body.email,
+    user.password = req.body.password,
+    user.phone_number = req.body.phone_number,
+    user.ban = req.body.ban,
+    user.command_no = req.body.command_no,
+    user.exact_location = req.body.exact_location,
+    user.picture_url = req.body.picture_url,
+    user.prefered_lng=req.body.prefered_lng,
+    user.zone = req.body.zone;
+
   user.save(function (err, data) {
     if (err) {
       res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
-      console.log(err);
     } else {
       console.log(data);
       res.json({ success: true, msg: "Utilisateur créé avec succès", obj: data.id });
     }
   });
 });
-
-
-
-
+//Authentification
 router.post('/auth', function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  User.getUserByEmail(email, (err, user) => {
+  User.getTravelerByEmail(email, (err, user) => {
     if (err) throw err;
     if (!user) {
       return res.json({ success: false, msg: "L ' email entré ne correspond à aucun compte" });
@@ -57,14 +69,16 @@ router.post('/auth', function (req, res, next) {
           success: true,
           token: 'JWT ' + token,
           user: {
-            /*fname,lname,email,adress,password,tel,image */
             fname: user.fname,
             lname: user.lname,
             email: user.email,
-            adress: user.adress,
-            tel: user.tel,
-            image: user.image,
-            type: user.type
+            phone_number: user.phone_number,
+            ban: user.ban,
+            command_no: user.command_no,
+            exact_location:user.exact_location,
+            picture_url:user.picture_url,
+            prefered_lng:user.prefered_lng,
+            zone:user.zone
           }
         })
       }
@@ -76,14 +90,31 @@ router.post('/auth', function (req, res, next) {
 
   });
 });
-//Update
-
-router.put('/:id', passport.authenticate('jwt', { session: false }), function (req, res, next) {
-  if (req.body.password && req.body.password.length < 50) {
+//GET ALL
+router.get('/', function (req, res, next) {
+  User.find(function (err, users) {
+    if (err) return next(err);
+    res.json(users);
+  });
+});
+//Get travelers nbre
+router.get('/nbr',function (req, res, next){
+  User.find().count(function(err, count){
+    if(err) return next(err);
+    res.json(count);
+});
+})
+//Modification
+router.put('/:id', function (req, res, next) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({
+      message: 'Id is invalid ' + req.params.id
+    });
+  }
+  if (req.body.password) {
     bcrypt.hash(req.body.password, null, null, function (err, hash) {
       if (err) return next(err);
       req.body.password = hash;
-
       User.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
         if (err) return next(err);
         res.json(post);
@@ -97,101 +128,114 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), function (r
     });
   }
 });
-
-//Get All
-router.get('/', passport.authenticate('jwt', { session: false }), function (req, res, next) {
-  User.find(function (err, users) {
-    if (err) return next(err);
-    res.json(users);
-  });
-});
-/* router.post('/test', function(req,res,next){
-   for(let i=0;i<=25;i++)
-   {
-     var user = new User();
-     user.fname    = "Papou"+i;
-     user.lname    = "Pica"+i;
-     user.email    = "papou"+i+"@gmail.com";
-     user.adress = "Kram"+i;
-     user.password = "password";
-     user.tel = "2265942"+i;
-     user.image = req.body.image;
-     user.type = req.body 
-   }
- })*/
-//Find By Id
-router.get('/:id', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+//Recuperation by id
+router.get('/:id', function (req, res, next) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({
+      message: 'Id is invalid ' + req.params.id
+    });
+  }
   User.findById(req.params.id, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });
 });
-//Delete by id
-router.delete('/:id', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+//Suppression
+router.delete('/:id', function (req, res, next) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({
+      message: 'Id is invalid ' + req.params.id
+    });
+  }
   User.findByIdAndRemove(req.params.id, req.body, function (err, post) {
     if (err) return next(err);
-    res.json(post);
+    res.json("Client supprimé avec succès");
   });
+
 });
+//Update ban
+router.put('/ban/:userId',  function (req, res, next) {
+  var userId = req.params.userId;
+  var ban = req.body.ban;
 
+  User.update({ '_id': userId },{$set:{'ban': ban }}, function (err, user) {
 
+    if (err)
+      { 
+        res.json({ success: false, msg: "Probleme" });
+      }else{
+      res.json({ success: true, msg: "User banni", obj: user});
+      }
+  });
+})
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/assets/uploads')
+    cb(null, './uploads/user/')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now()+".jpeg")
+    cb(null, file.fieldname + '-' + Date.now() + ".jpeg")
   }
 })
 
 var upload = multer({ storage: storage })
 
-router.post('/uploadphoto/:id', upload.single('image'), (req, res) => {
-  console.log(req.params.id);
-  console.log(req.body);
-  console.log(req.file);
-  console.log("none")
-
-  var imgSRC = "http://164.132.113.63:3000/uploads/" + req.file.filename;
-  User.update({ "_id": req.params.id }, { "image": imgSRC }, function (err, user) {
+//Upload one pic
+router.post('/uploadpic/:id',upload.single('image'),function(req, res) {
+  var imgSRC = "/uploads/user/" + req.file.filename;
+  User.update({ "_id": req.params.id }, { $set: { picture_url: imgSRC } }, function (err, user) {
     if (err) {
       return res.json({ success: false, msg: "Probleme update" })
     } else {
-      return res.json({ success: true, user });
+      return res.json({ success: true, obj:user });
     }
 
   });
 })
 
-router.get('/nbrapp/:id', passport.authenticate('jwt', { session: false }), function (req, res, next) {
-  let nbr = 0;
-  Job.find(function (err, jobs) {
-    if (err) {
-      res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
-    } else {
-      console.log(jobs.length);
-      for (var i = 0; i < jobs.length; i++) {
-        console.log(i);
-        if (typeof jobs[i].users !== 'undefined' && jobs[i].users) {
-        for (var j = 0; j < jobs[i].users.length; j++) {
-          console.log(j);
-          
-            if (jobs[i].users[j].userId == req.params.id) {
-              console.log("le " + jobs[i].users[j].userId);
-              console.log("lee " + req.params.id);
-              console.log("Trouve !")
-              nbr++;
-            }
-         
+//update zone
+router.put('/zone/:userId', function (req, res, next) {
+  var userId = req.params.userId;
+  var zone = req.body.zone;
 
-        }
+  User.update({ '_id': userId },{$set:{zone: zone }}, function (err, user) {
+
+    if (err)
+      { 
+        res.json({ success: false, msg: "Probleme" });
+      }else{
+      res.json({ success: true, msg: "Zone mis a jour", obj: user});
       }
-
-      }
-
-      res.json({ success: true, msg: "Nombre de users trouves", obj: nbr })
-    }
   });
-});
+})
+
+//update exact location
+router.put('/exact/:userId', function (req, res, next) {
+  var userId = req.params.userId;
+  var exact = req.body.exact_location;
+
+  User.update({ '_id': userId },{$set:{exact_location: exact }}, function (err, user) {
+    if (err)
+      { 
+        res.json({ success: false, msg: "Probleme" });
+      }else{
+      res.json({ success: true, msg: "Exact location mis a jour", obj: user});
+      }
+  });
+})
+
+//update prefered language
+router.put('/lng/:userId',  function (req, res, next) {
+  var userId = req.params.userId;
+  var lng = req.body.prefered_lng;
+
+  User.update({ '_id': userId },{$set:{prefered_lng: lng }}, function (err, user) {
+    if (err)
+      { 
+        res.json({ success: false, msg: "Probleme" });
+      }else{
+      res.json({ success: true, msg: "Language mis a jour", obj: user});
+      }
+  });
+})
 
 module.exports = router;
