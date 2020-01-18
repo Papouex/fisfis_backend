@@ -31,10 +31,10 @@ router.put('/product/:categorieId', function (req, res, next) {
     const product = req.body.product;
     const subcat=req.body.subcat
     Categorie.update(
-        { _id: categorieId, 'subcats.name': subcat  },
+        { _id: categorieId, 'subcats._id': subcat  },
         {
-            $addToSet: {
-                'subcats.products': {
+            $push: {
+                'subcats.$.products': {
                     product:product
                 }
             }
@@ -59,7 +59,13 @@ router.get('/', function (req, res, next) {
         }
     });
 });
-
+//Categories Number
+router.get('/nbr',passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    Categorie.find().count(function (err, count) {
+        if (err) return next(err);
+        res.json(count);
+    });
+})
 //Modification
 router.put('/:id', function (req, res, next) {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -107,11 +113,6 @@ var storage = multer.diskStorage({
     }
 });
 var upload = multer({ storage: storage })
-//Upload categorie image
-router.post('/imageup', upload.single('image'), function (req, res) {
-    var imgSRC = "/uploads/categories/" + req.file.filename;
-    return res.json({success: true,image:imgSRC})
-});
 //Update categorie image
 router.post('/image/:id', upload.single('image'), function (req, res) {
     var imgSRC = "/uploads/categories/" + req.file.filename;

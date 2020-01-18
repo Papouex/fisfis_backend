@@ -27,7 +27,7 @@ router.post('/ajouter', function (req, res, next) {
 });
 //Read one
 router.get('/', function (req, res, next) {
-    Ads.find().sort('-createdAt').limit(1).exec(function (err, ads) {
+    Ads.find().limit(1).exec(function (err, ads) {
         if (err) {
             res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
         } else {
@@ -83,11 +83,7 @@ var storage = multer.diskStorage({
     }
 });
 var upload = multer({ storage: storage })
-//Upload ad image
-router.post('/imageup', upload.single('image'), function (req, res) {
-    var imgSRC = "/uploads/ad/" + req.file.filename;
-    return res.json({success: true,image:imgSRC})
-});
+
 
 //Update ad image
 router.post('/image/:id', upload.single('image'), function (req, res) {

@@ -8,13 +8,14 @@ router.post('/ajouter', function (req, res, next) {
   
     var product = new Product();
     product.product_identifier=req.body.product_identifier;
-    product.imageSrc=req.body.imageSrc;
-    product.isActive=req.body.isActive;
     product.name=req.body.name;
     product.prix_u=req.body.prix_u;
     product.qteStock=req.body.qteStock;
-    product.seuilStock=req.body.seuilStock;
     product.purchasedQte=req.body.purchasedQte;
+    product.imageSrc=req.body.imageSrc;
+    product.isActive=req.body.isActive;
+    product.seuilStock=req.body.seuilStock;
+    
 
     product.save(function (err, data) {
         if (err) {
@@ -54,6 +55,7 @@ router.put('/:id', function (req, res, next) {
         res.json(post);
     });
 });
+
 //Get product by id
 router.get('/:id', function (req, res, next) {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -90,6 +92,24 @@ router.put('/active/:productId', function (req, res, next) {
             res.json({ success: false, msg: "Error" });
         } else {
             res.json({ success: true, msg: "Success updating active product status", obj: product });
+        }
+    })
+});
+//Update product quantité
+router.put('/qte/:productId', function (req, res, next) {
+    const productId = req.params.productId;
+    const qteStock = req.body.qteStock;
+    const purchasedQte=req.body.purchasedQte;
+    Product.update({ "_id": productId }, { $set:{
+        "qteStock": qteStock,
+        "purchasedQte":purchasedQte
+    }
+    }, function (err, product) {
+        if (err) {
+            console.log(err);
+            res.json({ success: false, msg: "Error" });
+        } else {
+            res.json({ success: true, msg: "Success updating product qte number", obj: product });
         }
     })
 });

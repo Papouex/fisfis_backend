@@ -14,19 +14,6 @@ const multer = require('multer');
 
 //Inscription
 router.post('/register', function (req, res, next) {
-  /**fname:    { type: String, required: true},
-    lname:    { type: String, required: true},
-    email:    { type: String, required: true, unique: 'Email \"{VALUE}\", est déja utiliser' },
-    password: { type: String, required: 'Mot de passe requis', unique: false},
-    phone_number:      { type: String, required: true, unique: 'Numero \"{VALUE}\", est déja utiliser' },
-    ban:{type: Boolean, default:false},
-    command_no:{type:Number,default:0},
-    exact_location:{type:String},
-    picture_url:{type:String},
-    prefered_lng:{type:String},
-    zone:{type:String,required:true},
-    updated_at:{type:Date,default:Date.now},
-    createdAt:{type:Date,default:Date.now}, */
   var user = new User();
     user.fname = req.body.fname,
     user.lname = req.body.lname,
@@ -97,7 +84,19 @@ router.get('/', function (req, res, next) {
     res.json(users);
   });
 });
-//Get travelers nbre
+//User today
+router.get('/today',passport.authenticate('jwt', { session: false }), function (req, res, next) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  User.find({ 'createdAt': { $gte: today } }).exec(function (err, users) {
+      if (err) {
+          res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
+      } else {
+          res.json({ success: true, msg: "Success getting today users", obj: users });
+      }
+  })
+})
+//Get users nbre
 router.get('/nbr',function (req, res, next){
   User.find().count(function(err, count){
     if(err) return next(err);
@@ -179,8 +178,8 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
 
-//Upload one pic
-router.post('/uploadpic/:id',upload.single('image'),function(req, res) {
+//Update
+router.post('/image/:id',upload.single('image'),function(req, res) {
   var imgSRC = "/uploads/user/" + req.file.filename;
   User.update({ "_id": req.params.id }, { $set: { picture_url: imgSRC } }, function (err, user) {
     if (err) {
@@ -204,6 +203,21 @@ router.put('/zone/:userId', function (req, res, next) {
         res.json({ success: false, msg: "Probleme" });
       }else{
       res.json({ success: true, msg: "Zone mis a jour", obj: user});
+      }
+  });
+})
+//update zone
+router.put('/cono/:userId', function (req, res, next) {
+  var userId = req.params.userId;
+  var command_no = req.body.command_no;
+
+  User.update({ '_id': userId },{$set:{command_no: command_no }}, function (err, user) {
+
+    if (err)
+      { 
+        res.json({ success: false, msg: "Probleme" });
+      }else{
+      res.json({ success: true, msg: "Command number mis a jour", obj: user});
       }
   });
 })

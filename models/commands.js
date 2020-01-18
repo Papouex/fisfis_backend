@@ -12,7 +12,7 @@ let CommandSchema = new Schema({
   request:{type:String},
   total:{type:Number,required:true},
   chosenTime:{type:String},
-
+  isPromotion:{type:Boolean,default:false},
   user:{
    id:{type:mongoose.Schema.Types.ObjectId, ref:'User',required:true},
    command_no:{type:Number},

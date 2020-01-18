@@ -26,7 +26,7 @@ router.post('/ajouter', function (req, res, next) {
 });
 //Read all
 router.get('/', function (req, res, next) {
-    General.find().sort('-createdAt').limit(1).exec(function (err, generals) {
+    General.find().limit(1).exec(function (err, generals) {
         if (err) {
             res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
         } else {

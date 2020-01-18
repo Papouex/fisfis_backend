@@ -14,7 +14,7 @@ router.post('/register', function (req, res, next) {
 
     admin.name=req.body.name;
     admin.email = req.body.email,
-    admin.password = req.body.password,
+    admin.password = req.body.password, 
     admin.delivery=req.body.delivery;
 
   admin.save(function (err, data) {
@@ -50,7 +50,8 @@ router.post('/auth', function (req, res, next) {
           token: 'JWT ' + token,
           admin: {
             email: admin.email,
-            name:admin.name
+            name:admin.name,
+            delivery:admin.delivery
           }
         })
       }

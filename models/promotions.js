@@ -10,7 +10,7 @@ let PromoSchema = new Schema({
     }
     ],
     isActive:{type:Boolean,default:true},
-    percentage:{type:Number,required:true},
+    percentage:{type:Number,required:false},
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 }, { timestamps: true });

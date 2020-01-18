@@ -21,7 +21,7 @@ router.post('/ajouter', function (req, res, next) {
     command.user=req.body.user;
     command.products=req.body.products;
     command.products_no=req.body.products_no;
-       
+    command.isPromotion=req.body.isPromotion;   
 
     command.save(function (err, data) {
         if (err) {
@@ -42,6 +42,25 @@ router.get('/', function (req, res, next) {
         }
     });
 });
+//Command today
+router.get('/today',passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    Command.find({ 'createdAt': { $gte: today } }).exec(function (err, commands) {
+        if (err) {
+            res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
+        } else {
+            res.json({ success: true, msg: "Success getting today commands", obj: commands });
+        }
+    })
+})
+//Commands Number
+router.get('/nbr',passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    Command.find().count(function (err, count) {
+        if (err) return next(err);
+        res.json(count);
+    });
+})
 //Get by id
 router.get('/:id', function (req, res, next) {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -74,19 +93,6 @@ router.put('/:id', function (req, res, next) {
         res.json(post);
     });
 });
-
-//Command today
-router.get('/today',passport.authenticate('jwt', { session: false }), function (req, res, next) {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    Command.find({ 'createdAt': { $gte: today } }).exec(function (err, commands) {
-        if (err) {
-            res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
-        } else {
-            res.json({ success: true, msg: "Success getting today commands", obj: commands });
-        }
-    })
-})
 //Delete
 router.delete('/:id', function (req, res, next) {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {

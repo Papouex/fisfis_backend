@@ -4,8 +4,8 @@ const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 let GeneralSchema = new Schema({
 
-    opening_hour:{type:Date,required:true},
-    closing_hour:{type:Date,required:true},
+    opening_hour:{type:String,required:true},
+    closing_hour:{type:String,required:true},
     locations_list:[String],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }

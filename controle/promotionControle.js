@@ -33,7 +33,7 @@ router.get('/', function (req, res, next) {
         }
     });
 });
-//Get forms nbr
+//Get promotions nbr
 router.get('/nbr',function (req, res, next){
     Promotion.find().count(function(err, count){
       if(err) return next(err);
