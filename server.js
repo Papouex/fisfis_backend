@@ -27,6 +27,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json()); // for parsing application/json
 
 app.use(bodyParser.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
+app.use(express.static(path.join(__dirname, 'public'), {maxage:'864000'}, {redirect:false}));
 app.use(cors());
 
 app.use(passport.initialize());
@@ -46,7 +47,10 @@ app.use('/admin',admin);
 app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
 
 
-    mongoose.Promise = global.Promise;
+app.all('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});  
+mongoose.Promise = global.Promise;
     mongoose.connect(config.DB, { useNewUrlParser: true }).then(
       () => {console.log('Database is connected') },
       err => { console.log('Can not connect to the database'+ err)}
