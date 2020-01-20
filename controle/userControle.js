@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt-nodejs');
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const mongoose = require('mongoose');
 const User = require('../models/users');
-
+const Pass = require('../models/passes');
 
 const multer = require('multer');
 
@@ -15,7 +15,7 @@ const multer = require('multer');
 //Inscription
 router.post('/register', function (req, res, next) {
   var user = new User();
-    user.fname = req.body.fname,
+  user.fname = req.body.fname,
     user.lname = req.body.lname,
     user.email = req.body.email,
     user.password = req.body.password,
@@ -26,15 +26,22 @@ router.post('/register', function (req, res, next) {
     user.picture_url = req.body.picture_url,
     user.prefered_lng=req.body.prefered_lng,
     user.zone = req.body.zone;
-
-  user.save(function (err, data) {
+   var pass=req.body.pass;
+   Pass.find({ "pass": pass }).exec( function (err, pass) {
     if (err) {
-      res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
+        console.log(err);
+        res.json({ success: false, msg: "Error" });
     } else {
-      console.log(data);
-      res.json({ success: true, msg: "Utilisateur créé avec succès", obj: data.id });
+        user.save(function (err, data) {
+          if (err) {
+            res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
+          } else {
+            console.log(data);
+            res.json({ success: true, msg: "Utilisateur créé avec succès", obj: data.id });
+          }
+        });
     }
-  });
+})
 });
 //Authentification
 router.post('/auth', function (req, res, next) {

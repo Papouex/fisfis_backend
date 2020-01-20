@@ -23,6 +23,8 @@ router.post('/ajouter', function (req, res, next) {
         }
     });
 });
+
+
 //Read all
 router.get('/', function (req, res, next) {
     Pass.find().sort('-createdAt').exec(function (err, passes) {
@@ -83,6 +85,7 @@ router.put('/user/:passId',passport.authenticate('jwt', { session: false }), fun
             res.json({ success: true, msg: "Success updating pass user", obj: pass });
         }
     })
+  
 });
 
 module.exports = router;
