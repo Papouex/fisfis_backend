@@ -8,7 +8,7 @@ const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const mongoose = require('mongoose');
 const User = require('../models/users');
 const Pass = require('../models/passes');
-
+const Precommand = require('../models/precommand');
 const multer = require('multer');
 
 
@@ -30,14 +30,30 @@ router.post('/register', function (req, res, next) {
    Pass.find({ "pass": pass }).exec( function (err, pass) {
     if (err) {
         console.log(err);
-        res.json({ success: false, msg: "Error" });
+        res.json({ success: false, msg: "VIP Pass invalide" });
     } else {
         user.save(function (err, data) {
           if (err) {
             res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
           } else {
-            console.log(data);
-            res.json({ success: true, msg: "Utilisateur créé avec succès", obj: data.id });
+            let x={
+              userId:data.id,
+              pass:pass
+            }
+            var precommande = new Precommand();
+            precommande.name="Command_num_0";
+            precommande.total=0;
+            precommande.user=data.id;
+            precommande.imageSrc="/uploads/categories/breakfast.png";
+            precommande.products=[];
+            precommande.save(function (err, data) {
+              if (err) {
+                  res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
+              } else {
+                  res.json({ success: true, msg: "Utilisateur créé avec succès", obj: x });
+              }
+          });
+           
           }
         });
     }

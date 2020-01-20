@@ -77,7 +77,7 @@ router.delete('/:id', function (req, res, next) {
 router.put('/user/:passId',passport.authenticate('jwt', { session: false }), function (req, res, next) {
     const passId = req.params.passId;
     const userId = req.body.userId;
-    Pass.update({ "_id": passId }, { "user": userId }, function (err, pass) {
+    Pass.update({ "_id": passId }, { "user": userId,"isActive":false }, function (err, pass) {
         if (err) {
             console.log(err);
             res.json({ success: false, msg: "Error" });

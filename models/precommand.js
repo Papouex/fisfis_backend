@@ -9,7 +9,7 @@ let PrecommandSchema = new Schema({
     imageSrc:{type:String,required:true},
     user:{type:mongoose.Schema.Types.ObjectId, ref:'User',required:true},
     products:[{
-        product:{type:mongoose.Schema.Types.ObjectId, ref:'Product',required:true}
+        product:{type:mongoose.Schema.Types.ObjectId, ref:'Product'}
     }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
