@@ -13,6 +13,32 @@ const multer = require('multer');
 
 
 //Inscription
+router.post('/registertest', function (req, res, next) {
+  var user = new User();
+  user.fname = req.body.fname,
+    user.lname = req.body.lname,
+    user.email = req.body.email,
+    user.password = req.body.password,
+    user.phone_number = req.body.phone_number,
+    user.ban = req.body.ban,
+    user.command_no = req.body.command_no,
+    user.exact_location = req.body.exact_location,
+    user.picture_url = req.body.picture_url,
+    user.prefered_lng=req.body.prefered_lng,
+    user.zone = req.body.zone;
+        user.save(function (err, data) {
+          if (err) {
+            res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
+          } else {
+
+                  res.json({ success: true, msg: "Utilisateur créé avec succès", obj: x });
+              }
+          });
+           
+        
+});
+
+ //Inscription
 router.post('/register', function (req, res, next) {
   var user = new User();
   user.fname = req.body.fname,
@@ -59,6 +85,7 @@ router.post('/register', function (req, res, next) {
     }
 })
 });
+ 
 //Authentification
 router.post('/auth', function (req, res, next) {
   const email = req.body.email;
