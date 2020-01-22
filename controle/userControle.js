@@ -91,7 +91,7 @@ router.post('/auth', function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  User.getTravelerByEmail(email, (err, user) => {
+  User.getUserByEmail(email, (err, user) => {
     if (err) throw err;
     if (!user) {
       return res.json({ success: false, msg: "L ' email entré ne correspond à aucun compte" });
