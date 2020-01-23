@@ -33,7 +33,7 @@ router.get('/:userId', function (req, res, next) {
         if (err) {
             res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
         } else {
-            res.json({ success: true, msg: "Success getting categories", obj: categories });
+            res.json({ success: true, msg: "Success getting categories", obj: precommands });
         }
     });
 });
@@ -51,7 +51,7 @@ router.put('/:id', function (req, res, next) {
     });
 });
 //Get by id
-router.get('/:id', function (req, res, next) {
+router.get('/by/:id', function (req, res, next) {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).send({
             message: 'Id is invalid ' + req.params.id
