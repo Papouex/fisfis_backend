@@ -106,6 +106,7 @@ router.post('/auth', function (req, res, next) {
           success: true,
           token: 'JWT ' + token,
           user: {
+		      	id:user._id,
             fname: user.fname,
             lname: user.lname,
             email: user.email,
@@ -115,7 +116,8 @@ router.post('/auth', function (req, res, next) {
             exact_location:user.exact_location,
             picture_url:user.picture_url,
             prefered_lng:user.prefered_lng,
-            zone:user.zone
+            zone:user.zone,
+            createdAt:user.createdAt
           }
         })
       }
