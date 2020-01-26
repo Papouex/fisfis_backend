@@ -16,8 +16,8 @@ function randomValueHex (len) {
 //Ajouter destination
 router.post('/ajouter', function (req, res, next) {
     var pass = new Pass();
-    var string = randomValueHex(4);
-    pass.pass = string;
+    var item = randomValueHex(4);
+    pass.pass = item;
     pass.creator = req.body.creator;
     pass.isActive = req.body.isActive;
 
@@ -26,7 +26,7 @@ router.post('/ajouter', function (req, res, next) {
             res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
         } else {
             console.log(data);
-            res.json({ success: true, msg: "Pass créée avec succès", obj: data.id });
+            res.json({ success: true, msg: "Pass créée avec succès", obj: item});
         }
     });
 });
