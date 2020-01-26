@@ -7,10 +7,17 @@ const bcrypt = require('bcrypt-nodejs');
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const mongoose = require('mongoose');
 const Pass = require('../models/passes');
+var crypto = require('crypto');
+function randomValueHex (len) {
+    return crypto.randomBytes(Math.ceil(len/2))
+        .toString('hex') // convert to hexadecimal format
+        .slice(0,len).toUpperCase();   // return required number of characters
+}
 //Ajouter destination
 router.post('/ajouter', function (req, res, next) {
     var pass = new Pass();
-    pass.pass = req.body.pass;
+    var string = randomValueHex(4);
+    pass.pass = string;
     pass.creator = req.body.creator;
     pass.isActive = req.body.isActive;
 
@@ -86,6 +93,18 @@ router.put('/user/:passId',passport.authenticate('jwt', { session: false }), fun
         }
     })
   
+});
+//get by user
+router.get('/user/:userId', function (req, res, next) {
+    var userId = req.params.userId;
+    Pass.find({ "creator": userId }).exec(function (err, passes) {
+        if (err) {
+            console.log(err);
+            res.json({ success: false, msg: "Error" });
+        } else {
+            res.json({ success: true, msg: "Success getting user passes", obj: passes });
+        }
+    });
 });
 
 module.exports = router;
