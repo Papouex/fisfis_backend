@@ -19,7 +19,6 @@ router.post('/ajouter', function (req, res, next) {
     var item = randomValueHex(4);
     pass.pass = item;
     pass.creator = req.body.creator;
-    pass.isActive = req.body.isActive;
 
     pass.save(function (err, data) {
         if (err) {
