@@ -81,10 +81,10 @@ router.delete('/:id', function (req, res, next) {
 });
 
 //update pass user
-router.put('/user/:passId',passport.authenticate('jwt', { session: false }), function (req, res, next) {
-    const passId = req.params.passId;
+router.put('/user/:pass',passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    const pass = req.params.pass;
     const userId = req.body.userId;
-    Pass.update({ "_id": passId }, { "user": userId,"isActive":false }, function (err, pass) {
+    Pass.update({ "pass": pass }, { "user": userId,"isActive":false }, function (err, pass) {
         if (err) {
             console.log(err);
             res.json({ success: false, msg: "Error" });
