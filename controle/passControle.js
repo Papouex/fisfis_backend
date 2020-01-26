@@ -95,7 +95,7 @@ router.put('/user/:pass',passport.authenticate('jwt', { session: false }), funct
   
 });
 //get by user
-router.get('/user/:userId', function (req, res, next) {
+router.get('/creator/:userId', function (req, res, next) {
     var userId = req.params.userId;
     Pass.find({ "creator": userId }).exec(function (err, passes) {
         if (err) {
