@@ -94,7 +94,7 @@ router.get('/ad/:adId', passport.authenticate('jwt', { session: false }), functi
         });
     }
 
-    Notification.find({ 'receiver_ad': adId }).sort('-createdAt').limit(15).exec(function (err, notificationFounded) {
+    Notification.find({ 'receivers_ad': adId }).sort('-createdAt').limit(15).exec(function (err, notificationFounded) {
         if (err) return res.status(status.BAD_REQUEST).json(err);
         // We serve as json the Notifications founded
         res.status(status.OK).json(notificationFounded);
@@ -106,7 +106,7 @@ router.get('/ad/:adId', passport.authenticate('jwt', { session: false }), functi
 router.get('/:ad', passport.authenticate('jwt', { session: false }), function (req, res, next) {
 
     var adId = req.params.ad;
-    Notification.find({ 'receiver_ad': adId }).sort('-createdAt').exec(function (err, notifications) {
+    Notification.find({ 'receivers_ad': adId }).sort('-createdAt').exec(function (err, notifications) {
         if (err) return res.status(status.BAD_REQUEST).json(err);
 
         // object of all the Notifications

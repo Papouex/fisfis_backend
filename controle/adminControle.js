@@ -26,9 +26,20 @@ router.post('/register', function (req, res, next) {
     }
   });
 });
-
-
-
+//GET ADMINS IDS
+router.get('/adid',function(req, res, next){
+  Admin.find(function (err, admins) {
+      if (err) {
+          res.json({ success: false, msg: err.errors[Object.keys(err.errors)[0]].message });
+      } else {
+          var adminsids=[];
+          admins.forEach(item=>{
+             adminsids.push(item._id);
+          })
+          res.json({ success: true, msg: "Success getting trips", obj: adminsids });
+      }
+  });
+})
 //Authentification
 router.post('/auth', function (req, res, next) {
   const email = req.body.email;
