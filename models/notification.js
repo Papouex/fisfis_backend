@@ -6,9 +6,13 @@ mongoose.set('useCreateIndex', true);
 
 
 var NotificationSchema   = new Schema({
-    sender_ad:{type:mongoose.Schema.Types.ObjectId, ref:'Admin', required:false,unique:false},
+    
     receiver_user:{type:mongoose.Schema.Types.ObjectId, ref:'User', required:false,unique:false},
-    receiver_ad:{type:mongoose.Schema.Types.ObjectId, ref:'Admin',required:false,unique:false}, // Ids of the receivers of the notification
+    sender_user:{type:mongoose.Schema.Types.ObjectId, ref:'User', required:false,unique:false},
+    sender_ad:{type:mongoose.Schema.Types.ObjectId, ref:'Admin', required:false,unique:false},
+    receivers_ad:[{type:mongoose.Schema.Types.ObjectId, ref:'Admin',required:false,unique:false}],
+    receiver_general:[{type:mongoose.Schema.Types.ObjectId, ref:'Admin',required:false,unique:false}],
+     // Ids of the receivers of the notification
     title: String,
     message: String, // any description of the notification message 
     link: { url:{type:String},params:{type:String},paramsValue:{type:String}},

@@ -11,13 +11,18 @@ router.post('/create', passport.authenticate('jwt', { session: false }), functio
     console.log(data);
     // create a new Notification
     var newNotification = new Notification();
-    if (data.admin)//Admin sender influencer receiver
+    if (data.admin)//Admin sender user receiver
     {
         newNotification.sender_ad = data.sender_ad;
         newNotification.receiver_user = data.receiver_user;
-    }else if(data.serv)
+    }else if(data.general)
     {
-        newNotification.receiver_ad=data.receiver_ad;
+      newNotification.receiver_general=data.receiver_general;
+      newNotification.sender_ad=data.sender_ad;
+    }else
+    {
+        newNotification.receivers_ad=data.receivers_ad;
+        newNotification.sender_user=data.sender_user;
     }
 
     newNotification.title = data.title;
@@ -42,10 +47,13 @@ router.post('/create', passport.authenticate('jwt', { session: false }), functio
             if (data.admin)//Admin is sender
             {
                 req.app.io.emit(newNotification.receiver_user, 'notif for you !');
-            } else if(data.serv)
+            } else
             {
                 //User is sender
-                req.app.io.emit(newNotification.receiver_ad, 'notif for you !');
+                for (var i in newNotification.receivers_ad) {
+                    req.app.io.emit(newNotification.receivers_ad[i], 'notif for you !');
+                }
+                
             }
 
         }
