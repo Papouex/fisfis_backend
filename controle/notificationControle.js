@@ -28,7 +28,6 @@ router.post('/create', passport.authenticate('jwt', { session: false }), functio
     newNotification.title = data.title;
     newNotification.image = data.image;
     newNotification.message = data.message;
-    newNotification.image=data.image;
     newNotification.link = data.link;
     // save the Notification
     newNotification.save(function (err, notification) {
